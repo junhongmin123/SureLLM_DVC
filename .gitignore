@@ -163,3 +163,4 @@ cython_debug/
 /.dvc
 /dataset
 /training_args.yaml
+/model
