@@ -164,3 +164,4 @@ cython_debug/
 /dataset
 /training_args.yaml
 /model
+/model2doc_yaml
