@@ -1,0 +1,6 @@
+outs:
+- md5: d042cc185fb26e173536dfd291310cd4.dir
+  size: 1006
+  nfiles: 2
+  hash: md5
+  path: ../model2doc_yaml
