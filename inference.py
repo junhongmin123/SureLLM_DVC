@@ -40,42 +40,37 @@ def model_response(tokenizer, sys_prompt, user_prompt, model):
     return output
 
 def inference():
-    while True:
-        model_type = input("Enter model type 'code2chart' or 'model2doc': ")
-        if any(word == model_type.strip().lower() for word in ["code2chart", "model2doc"]):
-            break
+    model_list = os.listdir("model/")
+    if len(model_list) == 0:
+        print("* There is NO model in the model directory.\n** Enter: 'dvc pull -j 100' to download the model.")
+    elif len(model_list) == 1:
+        model_path = model_list[0]
+    else:
+        print("* There are multiple models in the model directory.")
+        print("* Please select a model to load\n")
+        for i, model in enumerate(model_list):
+            print(f"{i+1}. {model}")
+        model_index = int(input("\nEnter model index: ")) - 1
+        model_path = model_list[model_index]
     
-    if model_type == "code2chart":
-        yaml_path = "training_args.yaml"
-        model_key = "output_dir"
-    elif model_type == "model2doc":
-        yaml_path = "model2doc_yaml/export.yaml"
-        model_key = "export_dir"
-    
-    with open(yaml_path, 'r') as file:
-        yaml_content = yaml.safe_load(file)
-    
-    model_name = yaml_content[model_key].split("/")[-1]
-    model_path = f"model/{model_name}"
-    
-    print("\nloading model...")
+    print(f"\nLoading model: {model_path}")
     llm_model, llm_tokenizer = load_model(model_path)
 
     sys_prompt = input("Set system prompt: ")
         
     print("\nStarting chat...")
-    print("-- enter 'setting' to set inference setting --")
-    print("-- enter 'quit' or 'exit' to finish --")
+    print("-- Enter 'Setting' to set inference setting --")
+    print("-- Enter 'Quit' or 'Exit' to finish --")
     
     while True:
         print()
         print("----------------------------------------------")
-        print("- Option: 'setting', 'quit', 'exit'          -")
+        print("- Option: 'Setting', 'Quit', 'Exit'          -")
         print("----------------------------------------------")
         user_input = input("\nuser: ")
         if "setting" in user_input.strip().lower():
             sys_prompt = input("Set system prompt: ")
-        elif any(word in user_input.strip().lower() for word in ["quit", "exit"]):
+        elif any(word == user_input.strip().lower() for word in ["quit", "exit"]):
             print("Exiting chat...")
             break
         else:
