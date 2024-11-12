@@ -54,9 +54,13 @@ def inference():
         model_path = model_list[model_index]
     
     print(f"\nLoading model: {model_path}")
-    llm_model, llm_tokenizer = load_model(model_path)
-
+    try:
+        llm_model, llm_tokenizer = load_model(model_path)
+    except:
+        llm_model, llm_tokenizer = load_model(f"model/{model_path}")
+        
     sys_prompt = input("Set system prompt: ")
+    pre_prompt = input("Set pre-prompt: ")
         
     print("\nStarting chat...")
     print("-- Enter 'Setting' to set inference setting --")
@@ -68,13 +72,14 @@ def inference():
         print("- Option: 'Setting', 'Quit', 'Exit'          -")
         print("----------------------------------------------")
         user_input = input("\nuser: ")
-        if "setting" in user_input.strip().lower():
+        if "setting" == user_input.strip().lower():
             sys_prompt = input("Set system prompt: ")
+            pre_prompt = input("Set pre-prompt: ")
         elif any(word == user_input.strip().lower() for word in ["quit", "exit"]):
             print("Exiting chat...")
             break
         else:
-            response = model_response(llm_tokenizer, sys_prompt, user_input, llm_model)
+            response = model_response(llm_tokenizer, sys_prompt, pre_prompt + user_input, llm_model)
             print(f"\nassistant: {response}")
             
 if __name__ == '__main__':
